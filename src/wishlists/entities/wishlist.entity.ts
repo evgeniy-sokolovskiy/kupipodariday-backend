@@ -7,9 +7,10 @@ import {
   ManyToOne,
   ManyToMany,
 } from 'typeorm'
-import { Length, IsUrl } from 'class-validator'
+import { Length, IsUrl, IsEmpty } from 'class-validator'
 import { Wish } from '../../wishes/entities/wish.entity'
 import { User } from '../../users/entities/user.entity'
+import { DEFAULT_WISHLIST_DESCRIPTION_TEXT } from '../../constants/users'
 
 @Entity()
 export class WishList {
@@ -28,7 +29,8 @@ export class WishList {
   @Length(1, 250)
   name: string
 
-  @Column()
+  @Column({ default: DEFAULT_WISHLIST_DESCRIPTION_TEXT })
+  @IsEmpty()
   @Length(0, 1500)
   description: string
 
