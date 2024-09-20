@@ -114,24 +114,27 @@ export class WishesService {
       where: { id },
       relations: ['offers', 'owner'],
     })
-
+    
     if (currentWish.owner.id !== ownerId) {
-      throw new ForbiddenException(
-        'You cannot change the item price because there are already offers',
-      )
-    }
-
-    if (currentWish.offers.length) {
       throw new ForbiddenException('You cannot edit other user gifts')
     }
 
+    if (currentWish.offers.length) {
+      throw new ForbiddenException(
+          'You cannot change the item price because there are already offers',
+      )
+    }
+
+    const { offers, ...wishWithoutOffers } = currentWish
+
     await this.wishesRepository.update(
-      { id },
-      {
-        ...currentWish,
-        ...updateWishDto,
-      },
+        { id },
+        {
+          ...wishWithoutOffers,
+          ...updateWishDto,
+        },
     )
+    
     return await this.findOne(id)
   }
 
