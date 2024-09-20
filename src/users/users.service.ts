@@ -10,10 +10,10 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
-import { getHashedPassword } from '../utils/password'
 import { Wish } from '../wishes/entities/wish.entity'
 import { SearchUserDto } from './dto/search-user.dto'
 import { WishesService } from '../wishes/wishes.service'
+import {BcryptService} from "../shared/services/bcrypt.service";
 
 @Injectable()
 export class UsersService {
@@ -22,6 +22,7 @@ export class UsersService {
     private userRepository: Repository<User>,
     @Inject(forwardRef(() => WishesService))
     private wishesService: WishesService,
+    private bcryptService: BcryptService
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -39,8 +40,8 @@ export class UsersService {
         throw new ConflictException('Email already exists')
       }
     }
-
-    createUserDto.password = await getHashedPassword(createUserDto.password)
+    
+    createUserDto.password = await this.bcryptService.hashPassword(createUserDto.password)
     const user = this.userRepository.create(createUserDto)
     return this.userRepository.save(user)
   }
@@ -124,7 +125,7 @@ export class UsersService {
       }
     }
     if (updateUserDto.password) {
-      updateUserDto.password = await getHashedPassword(updateUserDto.password)
+      updateUserDto.password = await this.bcryptService.hashPassword(updateUserDto.password)
     }
 
     return this.update(id, updateUserDto)

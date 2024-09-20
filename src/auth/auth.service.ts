@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { User } from '../users/entities/user.entity'
 import { JwtService } from '@nestjs/jwt'
 import { UsersService } from '../users/users.service'
-import * as bcrypt from 'bcrypt'
 import { SignupResponseDto } from './dto/signup-response.dto'
+import {BcryptService} from "../shared/services/bcrypt.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
+    private bcryptService: BcryptService
   ) {}
 
   async auth(user: User) {
@@ -25,7 +26,7 @@ export class AuthService {
     password: string,
   ): Promise<SignupResponseDto> {
     const user = await this.usersService.getByName(username)
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && (await this.bcryptService.comparePassword(password, user.password))) {
       // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       const { password, wishes, offers, wishlists, ...result } = user
       return result

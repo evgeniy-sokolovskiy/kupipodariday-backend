@@ -35,6 +35,7 @@ export class AuthController {
   ): Promise<SignupResponseDto> {
     const user = await this.usersService.create(createUserDto)
     await this.authService.auth(user)
-    return user
+    const {password, ...response} = user
+    return response
   }
 }

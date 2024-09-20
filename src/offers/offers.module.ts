@@ -7,9 +7,10 @@ import { Wish } from '../wishes/entities/wish.entity'
 import { User } from '../users/entities/user.entity'
 import { WishesService } from '../wishes/wishes.service'
 import { UsersService } from '../users/users.service'
+import {SharedModule} from "../shared/shared.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Offer, Wish, User])],
+  imports: [TypeOrmModule.forFeature([Offer, Wish, User]), SharedModule],
   controllers: [OffersController],
   providers: [OffersService, WishesService, UsersService],
 })
