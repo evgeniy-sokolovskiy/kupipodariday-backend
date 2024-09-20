@@ -1,7 +1,7 @@
 {
   "name": "kupipodariday",
   "version": "0.0.1",
-  "description": "",
+  "description": "KupiPodariDay is an application for creating and managing wishlists, where users can share their wishes and receive gifts from others.",
   "author": "e.sokolovskiy",
   "private": true,
   "license": "UNLICENSED",
