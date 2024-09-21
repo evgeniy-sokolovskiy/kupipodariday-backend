@@ -41,7 +41,7 @@ export class OffersService {
 
     await this.wishesService.update(userId, createOfferDto.itemId, {
       raised: Number(wish.raised) + createOfferDto.amount,
-    })
+    }, true)
 
     return await this.offerRepository.save({
       user,
